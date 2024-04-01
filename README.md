@@ -24,3 +24,5 @@ Laravel Project using Github OAuth Login and Export Excel file from json input
 
    Note: page reload is done for client side checking of queue is completed or not which lead into multiple queue of same export to be generated
    i.e autorefresh 3 time = 4 queue export which can be later optimized into using Laravel echo and Pusher for client and server side communication.
+
+   I had used the event listeners, pusher and echo but faced some issue to maintain communication from client to server resulting in use of page reload to check for the completion of queue.
