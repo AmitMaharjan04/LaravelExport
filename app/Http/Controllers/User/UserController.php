@@ -73,7 +73,7 @@ class UserController extends Controller
 
     public function exportDownload($path){
         $path = 'exports/'.$path . '.xlsx';
-        return response()->download(storage_path("app/".$path), 'exported_file.xlsx')->deleteFileAfterSend(true);
+        return response()->download(storage_path("app/".$path), 'users.xlsx')->deleteFileAfterSend(true);
     }
 
     public function logout(){
