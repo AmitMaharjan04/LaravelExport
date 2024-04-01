@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class UserExport implements FromCollection, ShouldQueue, WithMapping, WithHeadings,ShouldAutoSize
+class UserExport implements FromCollection, WithMapping, WithHeadings,ShouldAutoSize
 {
     /**
     * @return \Illuminate\Support\Collection
