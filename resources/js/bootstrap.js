@@ -10,15 +10,17 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  */
 
 // import './echo';
-
+// console.log("bootstrap");
 // import Echo from 'laravel-echo';
 // import Pusher from 'pusher-js';
 // window.Pusher = Pusher;
-
+// // window.Pusher = require('pusher-js');
 // window.Echo = new Echo({
 //     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+//     // key: process.env.MIX_PUSHER_APP_KEY,
+//     key: '220ac2505e626aa2f555',
+//     clsuter: 'ap2',
+//     // cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
 
@@ -26,7 +28,6 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     .listen('ExportJobCompleted', (event) => {
 //         console.log("here");
 //         window.location.href = '/download';
-//         // window.location.href = '/download/' + event.filePath;
 // })
 // .error((error) => {
 //     console.error("Channel subscription error:", error);

@@ -18,7 +18,6 @@
         <div class="col-md-2 d-flex align-items-center">
             @if($check && Storage::exists($path))
                 <a href="{{route('download-export', ['path' => $fileName])}}">Download File</a>
-        {{-- <a href="#" onclick="downloadFile()">Download File</a> --}}
             @elseif($check)
                 <script>
                     setTimeout(function() {
@@ -31,34 +30,3 @@
     </div>
 </form>
 @stop
-
-@push('js-stack')
-{{-- <script type="text/javascript">
- function downloadFile() {
-        // Replace 'full/path/to/your/file' with the actual path to your file
-        var filePath = '{{ $path }}';
-        
-        // Create a new XMLHttpRequest object
-        var xhr = new XMLHttpRequest();
-        
-        // Define the request parameters
-        xhr.open('POST', '{{ route("download-export") }}', true);
-        xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        
-        // Define the callback function to handle the response
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    // Handle success response
-                } else {
-                    // Handle error response
-                }
-            }
-        };
-        
-        // Send the request with the file path as JSON data
-        xhr.send(JSON.stringify({ filePath: filePath }));
-    }
-</script>  --}}
-@endpush

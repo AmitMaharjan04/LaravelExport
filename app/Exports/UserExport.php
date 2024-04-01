@@ -39,9 +39,8 @@ class UserExport implements FromCollection, WithMapping, WithHeadings,ShouldAuto
     public function map($row): array
     {
         $this->sn++;
-
         return [
-            $this->sn++,
+            $this->sn,
             $row['name'],
             $row['email'],
             $row['phone'],

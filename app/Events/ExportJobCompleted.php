@@ -17,10 +17,10 @@ class ExportJobCompleted implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public $path;
-    public function __construct($path)
+    public $filePath;
+    public function __construct($filePath)
     {
-        $this->path = $path;
+        $this->filePath = $filePath;
     }
 
     /**
@@ -28,12 +28,9 @@ class ExportJobCompleted implements ShouldBroadcast
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    public function broadcastOn()
+    public function broadcastOn(): Channel
     {
         return new Channel('excel-export');
-        // return [
-        //     new PrivateChannel('channel-name'),
-        // ];
     }
 
 }

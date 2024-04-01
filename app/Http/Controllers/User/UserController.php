@@ -2,19 +2,14 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Exports\UserExport;
 use App\Http\Controllers\Controller;
-use App\Jobs\DownloadExport;
 use App\Jobs\ExportExcel;
-use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Maatwebsite\Excel\Facades\Excel;
 use Exception;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\FileRequest;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -22,10 +17,12 @@ class UserController extends Controller
         return view('user.index');
     }
 
+    //redirection to github login API
     public function githubRedirect(){
         return Socialite::driver('github')->redirect();
     }
 
+    //response from github login API
     public function githubCallback(){
         try{
             $githubUser = Socialite::driver('github')->user();
@@ -37,97 +34,48 @@ class UserController extends Controller
                     'github_id' => $githubUser->id,
                 ]);
             }
+            //authenticate the user data from User Model 
             Auth::login($user);
             $msg = "Welcome " . $githubUser->name;
             return redirect()->route('dashboard')->with('success',$msg);
         }catch(Exception $e){
+            Log::info('Exception occured.' . print_r($e->getMessage(),true));
             return redirect()->route('login')->with('error','Unable to login. Please try again!');
         }
     }
 
     public function dashboard(){
-        // dd(session()->all());
+        //check is to see if file uploaded or not
         $check = false;
         return view('user.dashboard',compact('check'));
     }
 
     public function export(FileRequest $request){
-        // dd($request->file->getClientMimeType());
-        // $validator = Validator::make($request->all(), [
-        //     'file' => 'required|file|mimetypes:application/json,text/plain|max:5000', 
-        // ]);
-    
-        // if ($validator->fails()) {
-        //     return redirect()->back()->withErrors($validator)->withInput();
-        // }
-
+        //retrieve the file content of json file
         $fileContent = file_get_contents($request->file->getPathname());
         $file = json_decode($fileContent, true);
-        // $filePath = 'exports/users.xlsx';
+
+        //retrieve the file name 
         $originalFileName = $request->file('file')->getClientOriginalName();
         $fileName = pathinfo($originalFileName, PATHINFO_FILENAME);
 
-        // dd($fileNameWithoutExtension);
-        // Excel::store(new UserExport($file), $filePath);
-        $path = ExportExcel::dispatch($file,$fileName);
-        // dd($path);
-        // DownloadExport::dispatch($path);
-        // sleep(10); // Wait for 10 seconds (just an example, adjust as needed)
-        // $filePath = 'exports/' . time() . '.xlsx';
-        // // Check if the file exists and download it
-        // if (Storage::exists(storage_path('app/'.$filePath))) {
-        //     // Generate download link or directly download the file
-        //     return response()->download(storage_path('app/'.$filePath));
-        // } else {
-        //     dd("qwe");
-        //     // Handle error if file is not found
-        // }
-        // dd(Storage::exists('exports/users.xlsx'));
-        // return Excel::download(new UserExport($file), 'users.xlsx');
-        // return redirect()->route('download', ['file' => $asd]);
-        $path = 'exports/'.$fileName . '.xlsx';
-        $check = true;
-        return view('user.dashboard',compact('check','path','fileName'))->with('success','Data export has been queued. You will be notified when the file is ready for download.');
-        return redirect()->back()->with([
-            'success' => 'Data export has been queued. You will be notified when the file is ready for download.',
-            'check' => $check
-        ]);
-        // return redirect()->route('download');//'Data exported successfully!'
-        // dd($file);
-        // Excel::store(new UserExport($file), 'example.xlsx');
+        try{
+            ExportExcel::dispatch($file,$fileName);
 
-        // Dispatch the job
-        // ExportExcel::dispatch($file)->delay(now()->addSeconds(10));
-        // dd($file);
+            $path = 'exports/'.$fileName . '.xlsx';
+            $check = true;
+            return view('user.dashboard',compact('check','path','fileName'))->with('success','Data export has been queued. You will be notified when the file is ready for download.');
+        }catch(Exception $e){
+            Log::info('Exception occured.' . print_r($e->getMessage(),true));
+            return redirect()->back()->with('error','Something occured. Please try again!');
+        }
     }
-
-    // public function downloadExcel(Request $request)
-    // {
-        
-    //     $filePath = $request->input('file');
-    //     dd($filePath);
-    //     // Optionally, you can perform additional checks here to ensure the file exists, etc.
-
-    //     return response()->download(storage_path("app/{$filePath}"), 'users.xlsx');
-    // }
 
     public function exportDownload($path){
         $path = 'exports/'.$path . '.xlsx';
         return response()->download(storage_path("app/".$path), 'exported_file.xlsx')->deleteFileAfterSend(true);
-        Storage::download($path);
-        // $data = json_decode($request->getContent(), true);
-        // $filePath = $data['filePath'];
-        // dd(Storage::exists($filePath));
-        $filePath = '';
-        Storage::download($filePath);
-        return Storage::download(storage_path('app/'.$filePath));
-        // dd($filePath);
-        // // Storage::download(storage_path('exports/'))
-        // dd("q");
-        return response()->download(storage_path("app/".$filePath), 'exported_file.xlsx');
-        // return response()->download(storage_path("app/public/exports/users.xlsx"), 'exported_file.xlsx');
-        
     }
+
     public function logout(){
         session()->flush(); 
         Auth::logout();

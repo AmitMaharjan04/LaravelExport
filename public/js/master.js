@@ -12,5 +12,5 @@ document.addEventListener("DOMContentLoaded", function() {
             messageBox.addEventListener("animationend", function() {
                 messageBox.parentNode.removeChild(messageBox);
             });
-        }, 3000); // 5000 milliseconds = 5 seconds
+        }, 3000); // 3 seconds
 });

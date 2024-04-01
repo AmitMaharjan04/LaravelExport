@@ -35,18 +35,10 @@ class ExportExcel implements ShouldQueue
      */
     public function handle()
     {
-        // $filePath = 'exports/' . time() . '.xlsx';
         $filePath = 'exports/' . $this->fileName . '.xlsx';
         Excel::store(new UserExport($this->data), $filePath);
 
-        // broadcast(new \App\Events\ExportJobCompleted($filePath));
-        // dispatch(new DownloadExport($filePath));
-        // dd(Storage::exists(storage_path('app/exports/users.xlsx')));
-        // Storage::download(storage_path('app/'.$filePath));
-        // $filePath = storage_path('app/exports/users.xlsx');
-        // dd($filePath);
-        // return $filePath;
-        // return response()->download($filePath, 'your-export-file.xlsx')->deleteFileAfterSend(true);
         // Event::dispatch(new ExportJobCompleted($filePath));
+        // broadcast(new \App\Events\ExportJobCompleted($filePath));
     }
 }

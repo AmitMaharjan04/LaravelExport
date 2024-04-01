@@ -17,7 +17,7 @@ class HandleExportJobCompletion implements ShouldQueue
     public $userRepo;
     public function __construct()
     {
-        $this->userRepo = new UserRepository;
+        // $this->userRepo = new UserRepository;
     }
 
     /**

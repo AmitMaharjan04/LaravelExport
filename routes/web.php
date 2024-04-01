@@ -8,10 +8,8 @@ Route::get('/login/github', [UserController::class, 'githubRedirect'])->name('gi
 Route::get('/callback', [UserController::class, 'githubCallback'])->name('github-callback');
 
 Route::middleware(['github-auth'])->group(function () {
-    Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard')->middleware('github-auth');
+    Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
     Route::post('/dashboard', [UserController::class, 'export'])->name('import-json');
-
     Route::get('/download/{path}',  [UserController::class, 'exportDownload'])->name('download-export');
-
     Route::get('/logout',[UserController::class, 'logout'])->name('logout');
 });
